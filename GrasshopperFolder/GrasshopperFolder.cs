@@ -37,7 +37,12 @@ namespace GrasshopperGit
 
 				}
 				string directory = Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileNameWithoutExtension(filePath));
-				Directory.CreateDirectory(directory); 
+				DirectoryInfo directoryInfo = Directory.CreateDirectory(directory);
+				if (directoryInfo == null)
+					directoryInfo = new DirectoryInfo(directory);
+				foreach (FileInfo file in directoryInfo.GetFiles())
+					file.Delete(); // Should ignore git files
+
 				foreach (GH_Component component in Grasshopper.Instances.ActiveCanvas.Document.Objects.OfType<GH_Component>())
 				{
 					GH_Archive archieve = new GH_Archive();
